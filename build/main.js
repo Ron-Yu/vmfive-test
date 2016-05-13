@@ -1,6 +1,9 @@
 'use strict';
 
-window.onload = function () {};
+window.onload = function () {
+    insertImg();
+    showImg();
+};
 
 var CONTAINER = document.getElementById('container');
 var SQUARE = [].slice.call(document.querySelectorAll('.square'));
@@ -19,7 +22,13 @@ Array.prototype.shuffle = function () {
     });
 };
 
+var _shuffledArr = shuffledArr();
+
+var posArr = _shuffledArr.posArr;
+var imgArr = _shuffledArr.imgArr;
+
 // get shuffled array
+
 function shuffledArr() {
 
     var posArr = originalArr.slice().shuffle();
@@ -30,11 +39,8 @@ function shuffledArr() {
 
 // get random position and img number pairs
 function getRandomPairs() {
-    var _shuffledArr = shuffledArr();
 
-    var posArr = _shuffledArr.posArr;
-    var imgArr = _shuffledArr.imgArr;
-
+    // let {posArr, imgArr} = shuffledArr();
     var randomPairs = [];
 
     posArr.forEach(function (item, i) {
@@ -56,8 +62,6 @@ function creatImg(id) {
     return img;
 }
 
-console.log(getRandomPairs());
-
 // insert image node into square
 function insertImg() {
 
@@ -69,8 +73,17 @@ function insertImg() {
         var imageNode = creatImg(item.imgId);
 
         squareNode.appendChild(imageNode);
-
-        console.log(squareNode, imageNode);
     });
 }
-console.log(insertImg());
+
+function showImg() {
+
+    posArr.forEach(function (item, i) {
+
+        var shouldShowPosNode = document.getElementById(posArr[i]);
+
+        setTimeout(function () {
+            shouldShowPosNode.querySelector('.squareImg').classList.add('show');
+        }, 1000 * i);
+    });
+}

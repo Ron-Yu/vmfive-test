@@ -1,5 +1,6 @@
 window.onload = function() {
-
+    insertImg();
+    showImg();
 };
 
 const CONTAINER = document.getElementById('container');
@@ -20,6 +21,8 @@ Array.prototype.shuffle = function() {
     });
 }
 
+let {posArr, imgArr} = shuffledArr();
+
 
 // get shuffled array
 function shuffledArr() {
@@ -34,7 +37,7 @@ function shuffledArr() {
 // get random position and img number pairs
 function getRandomPairs() {
 
-    let {posArr, imgArr} = shuffledArr();
+    // let {posArr, imgArr} = shuffledArr();
     let randomPairs = [];
 
     posArr.forEach(function(item, i) {
@@ -57,7 +60,6 @@ function creatImg(id) {
     return img;
 }
 
-console.log(getRandomPairs())
 
 // insert image node into square
 function insertImg() {
@@ -71,7 +73,19 @@ function insertImg() {
 
         squareNode.appendChild(imageNode);
 
-        console.log(squareNode, imageNode);
     })
 }
-console.log(insertImg())
+
+function showImg() {
+
+    posArr.forEach(function(item, i) {
+
+        let shouldShowPosNode = document.getElementById(posArr[i]);
+
+        setTimeout(function() {
+            shouldShowPosNode.querySelector('.squareImg').classList.add('show');
+        }, 1000 * i)
+    })
+
+
+}
