@@ -36,7 +36,7 @@ body {
   height: 100vh; }
 
 #container {
-  border: 1px solid blue;
+  border: 1px solid #eee;
   width: 80vw;
   height: 60vw;
   position: absolute;
@@ -51,9 +51,10 @@ body {
       flex-flow: row wrap; }
 
 .square {
-  background-color: red;
+  background-color: transparent;
   margin: auto;
   width: 25%;
-  height: calc(100%/3); }
+  height: calc(100%/3);
+  overflow: hidden; }
 
 /*# sourceMappingURL=maps/application.css.map */
