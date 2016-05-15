@@ -2,7 +2,7 @@
 
 window.onload = function () {
     insertImg();
-    showImg();
+    // showImg();
 };
 
 var CONTAINER = document.getElementById('container');
@@ -34,7 +34,10 @@ function shuffledArr() {
     var posArr = originalArr.slice().shuffle();
     var imgArr = originalArr.slice().shuffle();
 
-    return { posArr: posArr, imgArr: imgArr };
+    return {
+        posArr: posArr,
+        imgArr: imgArr
+    };
 }
 
 // get random position and img number pairs
@@ -52,16 +55,6 @@ function getRandomPairs() {
     return randomPairs;
 }
 
-// creat image
-function creatImg(id) {
-
-    var img = new Image();
-    img.src = './img/' + id + '.png';
-    img.classList.add('squareImg');
-
-    return img;
-}
-
 // insert image node into square
 function insertImg() {
 
@@ -69,21 +62,88 @@ function insertImg() {
 
     randomPairs.forEach(function (item, i) {
 
-        var squareNode = document.getElementById(item.posId);
-        var imageNode = creatImg(item.imgId);
-
-        squareNode.appendChild(imageNode);
+        var squareNode = document.getElementById('square' + item.posId);
+        squareNode.querySelector('.squareImg').setAttribute('src', './img/' + item.imgId + '.png');
     });
 }
 
+// show image gradually
 function showImg() {
-
     posArr.forEach(function (item, i) {
-
-        var shouldShowPosNode = document.getElementById(posArr[i]);
-
+        var shouldShowPosNode = document.getElementById('square' + item);
         setTimeout(function () {
             shouldShowPosNode.querySelector('.squareImg').classList.add('show');
         }, 1000 * i);
     });
 }
+
+/* drag and drop */
+
+var squareImgs = document.querySelectorAll('.squareImg');
+var screenWidth = window.innerWidth;
+var screenHeight = window.innerHeight;
+var squareWidth = screenWidth * 0.2;
+var coordinateCompensation = {
+    x: screenWidth * 0.1,
+    y: screenHeight * 0.5 - screenWidth * 0.3
+};
+
+Array.prototype.forEach.call(squareImgs, function (squareImg, i) {
+
+    squareImg.addEventListener('touchstart', function (event) {
+        event.preventDefault();
+        console.log(event.changedTouches[0].pageX);
+        console.log(event.changedTouches[0].pageY);
+        console.log(squareImg.scrollTop);
+        // squareImg.style.position = 'fixed'
+        console.log(squareImg.style);
+        console.log(squareImg.getBoundingClientRect().left, squareImg.getBoundingClientRect().top);
+        // this.style.left = `${event.changedTouches[0].pageX}px`
+        // this.style.top = `${event.changedTouches[0].pageY}px`
+        this.style.zIndex = 2;
+    }, false);
+
+    squareImg.addEventListener('touchmove', function (event) {
+        event.preventDefault();
+        console.log(event.changedTouches[0].pageX);
+        console.log(event.changedTouches[0].pageY);
+        // console.log(squareImg.getBoundingClientRect().top, squareImg.getBoundingClientRect().left)
+        // this.style.left = `${event.changedTouches[0].pageX}px`
+        // this.style.top = `${event.changedTouches[0].pageY}px`
+        this.style.zIndex = 2;
+    }, false);
+
+    squareImg.addEventListener('touchend', function (event) {
+        event.preventDefault();
+
+        var desPosCoor = {
+            x: event.changedTouches[0].pageX - coordinateCompensation.x,
+            y: event.changedTouches[0].pageY - coordinateCompensation.y
+        };
+
+        var correspondingNum = {
+            x: Math.floor(desPosCoor.x / (screenWidth * 0.2)),
+            y: Math.floor(desPosCoor.y / (screenWidth * 0.2))
+        };
+
+        // from 0 to 11
+        var desPosSquareNum = correspondingNum.y * 4 + correspondingNum.x;
+
+        var targetImg = event.target;
+        var targetPos = targetImg.getBoundingClientRect();
+        // console.log(targetPos)
+        var targetImgSrc = targetImg.getAttribute('src');
+        var desPosSquare = document.getElementById('square' + desPosSquareNum);
+        var desPosImg = desPosSquare.querySelector('.squareImg');
+        var desImgSrc = desPosImg.getAttribute('src');
+
+        targetImg.style.left = squareWidth / 2 + 'px';
+        targetImg.style.top = squareWidth / 2 + 'px';
+        targetImg.style.zIndex = 1;
+
+        setTimeout(function () {
+            targetImg.setAttribute('src', desImgSrc);
+            desPosImg.setAttribute('src', targetImgSrc);
+        }, 100);
+    }, false);
+});

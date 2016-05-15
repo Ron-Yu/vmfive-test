@@ -31,15 +31,18 @@ table {
   border-spacing: 0; }
 
 body {
-  position: relative;
+  background-color: pink;
   width: 100vw;
   height: 100vh; }
+  @media all and (orientation: landscape) {
+    body {
+      background-color: skyblue; } }
 
 #container {
   border: 1px solid #eee;
   width: 80vw;
   height: 60vw;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
@@ -49,21 +52,23 @@ body {
   display: flex;
   -ms-flex-flow: row wrap;
       flex-flow: row wrap; }
+  @media all and (orientation: landscape) {
+    #container {
+      width: 70vw;
+      height: 52.5vw; } }
 
 .square {
-  background-color: transparent;
   margin: auto;
   width: 25%;
   height: calc(100%/3);
-  overflow: hidden;
   position: relative; }
 
 .squareImg {
-  visibility: hidden;
-  opacity: 0;
+  visibility: visible;
+  opacity: 1;
   -webkit-transition: all 0.2s linear;
   transition: all 0.2s linear;
-  width: 150px;
+  width: 70%;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -72,5 +77,13 @@ body {
   .squareImg.show {
     visibility: visible;
     opacity: 1; }
+
+[draggable] {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+      user-select: none;
+  -khtml-user-drag: element;
+  -webkit-user-drag: element; }
 
 /*# sourceMappingURL=maps/application.css.map */

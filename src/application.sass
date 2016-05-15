@@ -34,37 +34,48 @@ table
   border-collapse: collapse
   border-spacing: 0
 
-// base
+
+// mixin
+=landscape()
+  @media all and (orientation:landscape)
+    @content
+
+
+
 body
-    position: relative
-    width: 100vw
-    height: 100vh
+  background-color: pink
+  width: 100vw
+  height: 100vh
+  +landscape
+    background-color: skyblue
 
 // container
 #container
-    border: 1px solid #eee
-    width: 80vw
-    height: 60vw
-    position: absolute
-    top: 50%
-    left: 50%
-    transform: translate(-50%, -50%)
-    display: flex
-    flex-flow: row wrap
+  border: 1px solid #eee
+  width: 80vw
+  height: 60vw
+  +landscape
+    width: 70vw
+    height: 70vw * 0.75
+  position: fixed
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  display: flex
+  flex-flow: row wrap
 
 .square
-  background-color: transparent
   margin: auto
   width: 25%
   height: calc(100%/3)
-  overflow: hidden
+  // overflow: hidden
   position: relative
 
 .squareImg
-  visibility: hidden
-  opacity: 0
+  visibility: visible
+  opacity: 1
   transition: all 0.2s linear
-  width: 150px
+  width: 70%
   position: absolute
   top: 50%
   left: 50%
@@ -72,3 +83,13 @@ body
   &.show
     visibility: visible
     opacity: 1
+
+
+// drag and drop
+[draggable]
+  -moz-user-select: none
+  -khtml-user-select: none
+  -webkit-user-select: none
+  user-select: none
+  -khtml-user-drag: element
+  -webkit-user-drag: element

@@ -6,9 +6,11 @@ html(lang="en")
 head
 	meta(charset="UTF-8")
 	title Document
+	meta(name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no")
 	link(rel="stylesheet", href="./application.css")
 body
 	article#container
 		each number in numbers
-			div(class="square" id="#{number}")
+			div(class="square" id=("square" + "#{number}"))
+				img(src="" class="squareImg" draggable="true")
 	script(type="application/javascript", src="./main.js")
