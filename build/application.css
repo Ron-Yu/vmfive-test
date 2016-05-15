@@ -86,4 +86,10 @@ body {
   -khtml-user-drag: element;
   -webkit-user-drag: element; }
 
+.dragging {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 52.5px; }
+
 /*# sourceMappingURL=maps/application.css.map */
