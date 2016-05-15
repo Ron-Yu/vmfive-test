@@ -78,13 +78,9 @@ body {
     visibility: visible;
     opacity: 1; }
 
-[draggable] {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-      user-select: none;
-  -khtml-user-drag: element;
-  -webkit-user-drag: element; }
+.touchstart {
+  opacity: 0.5;
+  z-index: 2; }
 
 .dragging {
   position: fixed;

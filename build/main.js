@@ -92,8 +92,7 @@ Array.prototype.forEach.call(squareImgs, function (squareImg, i) {
 
     squareImg.addEventListener('touchstart', function (event) {
         event.preventDefault();
-
-        this.style.zIndex = 2;
+        this.classList.add('touchstart');
     }, false);
 
     squareImg.addEventListener('touchmove', function (event) {
@@ -101,8 +100,6 @@ Array.prototype.forEach.call(squareImgs, function (squareImg, i) {
         this.classList.add('dragging');
         this.style.top = event.changedTouches[0].pageY - (screenHeight * 0.5 - screenWidth * 0.3) + 'px';
         this.style.left = event.changedTouches[0].pageX - screenWidth * 0.1 + 'px';
-        console.log(this.style.top, this.style.left);
-        console.log(event.changedTouches[0].pageX, event.changedTouches[0].pageY);
     }, false);
 
     squareImg.addEventListener('touchend', function (event) {
@@ -128,14 +125,17 @@ Array.prototype.forEach.call(squareImgs, function (squareImg, i) {
         var desPosImg = desPosSquare.querySelector('.squareImg');
         var desImgSrc = desPosImg.getAttribute('src');
 
+        targetImg.classList.remove('touchstart');
         targetImg.classList.remove('dragging');
-        targetImg.style.left = squareWidth / 2 + 'px';
-        targetImg.style.top = squareWidth / 2 + 'px';
-        targetImg.style.zIndex = 1;
+
+        targetImg.style.display = 'none';
+        targetImg.style.left = '';
+        targetImg.style.top = '';
 
         setTimeout(function () {
             targetImg.setAttribute('src', desImgSrc);
             desPosImg.setAttribute('src', targetImgSrc);
+            targetImg.style.display = '';
         }, 100);
     }, false);
 });
