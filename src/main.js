@@ -1,6 +1,6 @@
 window.onload = function() {
     insertImg();
-    // showImg();
+    showImg();
 };
 
 const CONTAINER = document.getElementById('container');
@@ -21,10 +21,7 @@ Array.prototype.shuffle = function() {
     });
 }
 
-let {
-    posArr,
-    imgArr
-} = shuffledArr();
+let {posArr,imgArr} = shuffledArr();
 
 
 // get shuffled array
@@ -94,6 +91,9 @@ let coordinateCompensation = {
 }
 
 Array.prototype.forEach.call(squareImgs ,function(squareImg, i) {
+
+    // squareImg.style.width = `${squareWidth * 0.7}px`;
+    // console.log(squareImg.style.width);
 
     squareImg.addEventListener('touchstart', function(event) {
         event.preventDefault();

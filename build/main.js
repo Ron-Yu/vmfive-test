@@ -2,7 +2,7 @@
 
 window.onload = function () {
     insertImg();
-    // showImg();
+    showImg();
 };
 
 var CONTAINER = document.getElementById('container');
@@ -89,6 +89,9 @@ var coordinateCompensation = {
 };
 
 Array.prototype.forEach.call(squareImgs, function (squareImg, i) {
+
+    // squareImg.style.width = `${squareWidth * 0.7}px`;
+    // console.log(squareImg.style.width);
 
     squareImg.addEventListener('touchstart', function (event) {
         event.preventDefault();

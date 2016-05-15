@@ -64,28 +64,24 @@ body {
   position: relative; }
 
 .squareImg {
-  visibility: visible;
-  opacity: 1;
-  -webkit-transition: all 0.2s linear;
-  transition: all 0.2s linear;
-  width: 70%;
+  display: none;
+  width: 14vw;
   position: absolute;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%); }
+  @media all and (orientation: landscape) {
+    .squareImg {
+      width: 12.25vw; } }
   .squareImg.show {
-    visibility: visible;
-    opacity: 1; }
+    display: block; }
 
 .touchstart {
   opacity: 0.5;
   z-index: 2; }
 
 .dragging {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 52.5px; }
+  position: fixed; }
 
 /*# sourceMappingURL=maps/application.css.map */
