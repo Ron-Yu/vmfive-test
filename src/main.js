@@ -60,8 +60,7 @@ function insertImg() {
 
     randomPairs.forEach(function(item, i) {
 
-        let squareNode = document.getElementById(`square${item.posId}`);
-        squareNode.querySelector('.squareImg').setAttribute('src', `./img/${item.imgId}.png`);
+        document.querySelector(`#square${item.posId} .squareImg`).setAttribute('src', `./img/${item.imgId}.png`);
 
     })
 }
@@ -69,11 +68,21 @@ function insertImg() {
 
 // show image gradually
 function showImg() {
+
+    let firstImgDelay = 2000;
+    let duration = 1000
+
     posArr.forEach(function(item, i) {
-        let shouldShowPosNode = document.getElementById(`square${item}`);
-        setTimeout(function() {
-            shouldShowPosNode.querySelector('.squareImg').classList.add('show');
-        }, 1000 * i)
+
+        if(i === 0) {
+            setTimeout(function() {
+                document.querySelector(`#square${item} .squareImg`).classList.add('show');
+            }, firstImgDelay)
+        }else {
+            setTimeout(function() {
+                document.querySelector(`#square${item} .squareImg`).classList.add('show');
+            }, duration * i + firstImgDelay)
+        }
     })
 
 }
@@ -81,48 +90,77 @@ function showImg() {
 
 /* drag and drop */
 
-let squareImgs =  document.querySelectorAll('.squareImg');
-let screenWidth = window.innerWidth;
-let screenHeight = window.innerHeight;
-let squareWidth = screenWidth * 0.2;
-let coordinateCompensation = {
-    x: screenWidth * 0.1,
-    y: screenHeight * 0.5 - screenWidth * 0.3
+let squareImgs = document.querySelectorAll('.squareImg');
+let {screenWidth, screenHeight, squareWidth, coordinateCompensation} = getDimensionConfig();
+
+
+function getDimensionConfig() {
+    let screenWidth = window.innerWidth;
+    let screenHeight = window.innerHeight;
+    let squareWidth = screenWidth * 0.2;
+
+    // relative diatance between screen (0, 0) and #container (0, 0)
+    let coordinateCompensation = {
+        x: screenWidth * 0.1,
+        y: screenHeight * 0.5 - screenWidth * 0.3
+    }
+
+    return {screenWidth, screenHeight, squareWidth, coordinateCompensation};
+};
+
+window.addEventListener('orientationchange', getDimensionConfig);
+
+
+// get destination position coordinate, convert finger position cooidinate to
+function getDesPosCoor() {
+
+    console.log(coordinateCompensation);
+
+    let desPosCoor = {
+        x: event.changedTouches[0].pageX - coordinateCompensation.x,
+        y: event.changedTouches[0].pageY - coordinateCompensation.y
+    };
+
+    return desPosCoor;
 }
 
 Array.prototype.forEach.call(squareImgs ,function(squareImg, i) {
 
-    // squareImg.style.width = `${squareWidth * 0.7}px`;
-    // console.log(squareImg.style.width);
-
     squareImg.addEventListener('touchstart', function(event) {
+
         event.preventDefault();
+
         this.classList.add('touchstart');
 
     }, false);
 
     squareImg.addEventListener('touchmove', function(event) {
+
         event.preventDefault();
+
         this.classList.add('dragging');
-        this.style.top = `${event.changedTouches[0].pageY - (screenHeight * 0.5 - screenWidth * 0.3)}px`
-        this.style.left = `${event.changedTouches[0].pageX - screenWidth * 0.1}px`;
+
+        let {x, y} = getDesPosCoor();
+
+        // set img coordinate equaling to finger coordinate
+        this.style.top = `${y}px`
+        this.style.left = `${x}px`;
 
     }, false);
 
     squareImg.addEventListener('touchend', function(event) {
+
         event.preventDefault();
 
-        let desPosCoor = {
-            x: event.changedTouches[0].pageX - coordinateCompensation.x,
-            y: event.changedTouches[0].pageY - coordinateCompensation.y
-        };
+        let {x, y} = getDesPosCoor();
 
+        // set coordinating object like {x: 1, y: 2}
         let correspondingNum = {
-            x: Math.floor(desPosCoor.x / (screenWidth * 0.2)),
-            y: Math.floor(desPosCoor.y / (screenWidth * 0.2))
+            x: Math.floor(x / (screenWidth * 0.2)),
+            y: Math.floor(y / (screenWidth * 0.2))
         }
 
-        // from 0 to 11
+        // convert correspondingNum to coordinating number from 0 to 11
         let desPosSquareNum = correspondingNum.y * 4 + correspondingNum.x;
 
         let targetImg = event.target;
@@ -144,7 +182,6 @@ Array.prototype.forEach.call(squareImgs ,function(squareImg, i) {
             desPosImg.setAttribute('src', targetImgSrc);
             targetImg.style.display = '';
         }, 100)
-
 
     }, false);
 });

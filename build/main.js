@@ -62,63 +62,114 @@ function insertImg() {
 
     randomPairs.forEach(function (item, i) {
 
-        var squareNode = document.getElementById('square' + item.posId);
-        squareNode.querySelector('.squareImg').setAttribute('src', './img/' + item.imgId + '.png');
+        document.querySelector('#square' + item.posId + ' .squareImg').setAttribute('src', './img/' + item.imgId + '.png');
     });
 }
 
 // show image gradually
 function showImg() {
+
+    var firstImgDelay = 2000;
+    var duration = 1000;
+
     posArr.forEach(function (item, i) {
-        var shouldShowPosNode = document.getElementById('square' + item);
-        setTimeout(function () {
-            shouldShowPosNode.querySelector('.squareImg').classList.add('show');
-        }, 1000 * i);
+
+        if (i === 0) {
+            setTimeout(function () {
+                document.querySelector('#square' + item + ' .squareImg').classList.add('show');
+            }, firstImgDelay);
+        } else {
+            setTimeout(function () {
+                document.querySelector('#square' + item + ' .squareImg').classList.add('show');
+            }, duration * i + firstImgDelay);
+        }
     });
 }
 
 /* drag and drop */
 
 var squareImgs = document.querySelectorAll('.squareImg');
-var screenWidth = window.innerWidth;
-var screenHeight = window.innerHeight;
-var squareWidth = screenWidth * 0.2;
-var coordinateCompensation = {
-    x: screenWidth * 0.1,
-    y: screenHeight * 0.5 - screenWidth * 0.3
+
+var _getDimensionConfig = getDimensionConfig();
+
+var screenWidth = _getDimensionConfig.screenWidth;
+var screenHeight = _getDimensionConfig.screenHeight;
+var squareWidth = _getDimensionConfig.squareWidth;
+var coordinateCompensation = _getDimensionConfig.coordinateCompensation;
+
+
+function getDimensionConfig() {
+    var screenWidth = window.innerWidth;
+    var screenHeight = window.innerHeight;
+    var squareWidth = screenWidth * 0.2;
+
+    // relative diatance between screen (0, 0) and #container (0, 0)
+    var coordinateCompensation = {
+        x: screenWidth * 0.1,
+        y: screenHeight * 0.5 - screenWidth * 0.3
+    };
+
+    return { screenWidth: screenWidth, screenHeight: screenHeight, squareWidth: squareWidth, coordinateCompensation: coordinateCompensation };
 };
+
+window.addEventListener('orientationchange', getDimensionConfig);
+
+// get destination position coordinate, convert finger position cooidinate to
+function getDesPosCoor() {
+
+    console.log(coordinateCompensation);
+
+    var desPosCoor = {
+        x: event.changedTouches[0].pageX - coordinateCompensation.x,
+        y: event.changedTouches[0].pageY - coordinateCompensation.y
+    };
+
+    return desPosCoor;
+}
 
 Array.prototype.forEach.call(squareImgs, function (squareImg, i) {
 
-    // squareImg.style.width = `${squareWidth * 0.7}px`;
-    // console.log(squareImg.style.width);
-
     squareImg.addEventListener('touchstart', function (event) {
+
         event.preventDefault();
+
         this.classList.add('touchstart');
     }, false);
 
     squareImg.addEventListener('touchmove', function (event) {
+
         event.preventDefault();
+
         this.classList.add('dragging');
-        this.style.top = event.changedTouches[0].pageY - (screenHeight * 0.5 - screenWidth * 0.3) + 'px';
-        this.style.left = event.changedTouches[0].pageX - screenWidth * 0.1 + 'px';
+
+        var _getDesPosCoor = getDesPosCoor();
+
+        var x = _getDesPosCoor.x;
+        var y = _getDesPosCoor.y;
+
+        // set img coordinate equaling to finger coordinate
+
+        this.style.top = y + 'px';
+        this.style.left = x + 'px';
     }, false);
 
     squareImg.addEventListener('touchend', function (event) {
+
         event.preventDefault();
 
-        var desPosCoor = {
-            x: event.changedTouches[0].pageX - coordinateCompensation.x,
-            y: event.changedTouches[0].pageY - coordinateCompensation.y
-        };
+        var _getDesPosCoor2 = getDesPosCoor();
+
+        var x = _getDesPosCoor2.x;
+        var y = _getDesPosCoor2.y;
+
+        // set coordinating object like {x: 1, y: 2}
 
         var correspondingNum = {
-            x: Math.floor(desPosCoor.x / (screenWidth * 0.2)),
-            y: Math.floor(desPosCoor.y / (screenWidth * 0.2))
+            x: Math.floor(x / (screenWidth * 0.2)),
+            y: Math.floor(y / (screenWidth * 0.2))
         };
 
-        // from 0 to 11
+        // convert correspondingNum to coordinating number from 0 to 11
         var desPosSquareNum = correspondingNum.y * 4 + correspondingNum.x;
 
         var targetImg = event.target;
